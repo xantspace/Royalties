@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /portal-parent.html
+Disallow: /portal-teacher.html
+Disallow: /portal-admin.html
+
+Sitemap: https://royalties.edu.ng/sitemap.xml
