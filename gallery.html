@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Campus Gallery — Royalties International Christian Schools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#241B4E;
+    --indigo-deep:#180F38;
+    --gold:#C9A227;
+    --gold-soft:#E4CB79;
+    --parchment:#FAF6ED;
+    --parchment-dim:#F1EBDA;
+    --burgundy:#6B1E3C;
+    --ink:#1A1424;
+    --ink-soft:#4A4258;
+    --line:rgba(26,20,36,0.12);
+    --radius:4px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    background:var(--parchment);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .mono{
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-size:0.72rem;
+    font-weight:500;
+  }
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 24px;}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+
+  /* ===== HEADER ===== */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(250,246,237,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 24px;max-width:1280px;margin:0 auto;
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{width:34px;height:34px;flex-shrink:0;}
+  .brand-name{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem;letter-spacing:0.01em;color:var(--indigo);}
+  .brand-name span{display:block;font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.14em;color:var(--burgundy);text-transform:uppercase;margin-top:1px;}
+  nav.links{display:flex;gap:34px;align-items:center;}
+  nav.links a{font-size:0.88rem;font-weight:500;color:var(--ink-soft);transition:color .2s;}
+  nav.links a:hover, nav.links a.active{color:var(--indigo);}
+  .nav-cta{
+    background:var(--gold);color:var(--indigo-deep) !important;
+    padding:10px 22px;font-size:0.85rem;font-weight:600;
+    border-radius:var(--radius);transition:background .2s;
+  }
+  .nav-cta:hover{background:var(--gold-soft);}
+  .menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px;z-index:10;}
+  .menu-btn span{
+    display:block;width:22px;height:2px;
+    background:var(--indigo);border-radius:2px;
+    margin:5px 0;
+    transform-origin:center;
+    transition:transform .3s ease, opacity .3s ease;
+  }
+  /* Hamburger → X */
+  .menu-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .menu-btn.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+  .menu-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  /* ===== PAGE HERO ===== */
+  .page-hero{
+    background:
+      radial-gradient(ellipse 900px 500px at 78% -10%, rgba(201,162,39,0.16), transparent 60%),
+      var(--indigo);
+    color:var(--parchment);
+    padding:64px 24px 48px;position:relative;overflow:hidden;
+  }
+  .page-hero::after{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(rgba(250,246,237,0.05) 1px, transparent 1px),linear-gradient(90deg, rgba(250,246,237,0.05) 1px, transparent 1px);
+    background-size:64px 64px;
+    mask-image:radial-gradient(ellipse 800px 500px at 75% 10%, black, transparent);
+    pointer-events:none;
+  }
+  .page-hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:2;}
+  .breadcrumb{display:flex;align-items:center;gap:8px;color:rgba(250,246,237,0.55);margin-bottom:16px;font-size:0.85rem;}
+  .breadcrumb a{color:var(--gold-soft);transition:opacity .2s;}
+  .breadcrumb a:hover{opacity:0.8;}
+  .page-hero h1{font-size:clamp(2.2rem,4.6vw,3.4rem);max-width:700px;line-height:1.08;color:var(--parchment);}
+
+  /* ===== PINTEREST MASONRY SECTION ===== */
+  .gallery-section{padding:44px 0 88px;}
+
+  /* MASONRY WATERFALL CONTAINER */
+  .masonry-grid {
+    column-count: 4;
+    column-gap: 20px;
+    width: 100%;
+  }
+
+  /* PINTEREST MASONRY PIN ITEM */
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 20px;
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--indigo-deep);
+    cursor: pointer;
+    border: 1px solid rgba(26, 20, 36, 0.12);
+    transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .35s cubic-bezier(0.16, 1, 0.3, 1), border-color .35s ease;
+  }
+
+  .masonry-item:hover {
+    transform: translateY(-5px) scale(1.01);
+    border-color: var(--gold);
+    box-shadow: 0 20px 40px rgba(24, 15, 56, 0.22);
+  }
+
+  /* PINTEREST PIN ASPECT RATIOS */
+  .ratio-tall { height: 460px; }
+  .ratio-short { height: 260px; }
+  .ratio-medium { height: 350px; }
+  .ratio-extratall { height: 530px; }
+  .ratio-square { height: 310px; }
+
+  /* MASONRY IMAGE */
+  .masonry-img-wrapper {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    overflow: hidden;
+  }
+  .masonry-img-wrapper img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .masonry-item:hover .masonry-img-wrapper img {
+    transform: scale(1.07);
+  }
+
+  /* PINTEREST OVERLAY WITH EXPAND PIN BUTTON */
+  .masonry-overlay {
+    position: absolute; inset: 0; z-index: 2;
+    background: rgba(24, 15, 56, 0.45);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .masonry-item:hover .masonry-overlay {
+    opacity: 1;
+  }
+  .pin-badge {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--indigo-deep);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    transform: scale(0.85);
+    transition: transform .3s ease;
+  }
+  .masonry-item:hover .pin-badge {
+    transform: scale(1);
+  }
+
+  /* ===== LIGHTBOX MODAL ===== */
+  .modal-overlay{
+    position:fixed;inset:0;z-index:100;
+    background:rgba(24,15,56,0.94);
+    backdrop-filter:blur(10px);
+    display:flex;align-items:center;justify-content:center;
+    padding:24px;opacity:0;pointer-events:none;
+    transition:opacity .3s ease;
+  }
+  .modal-overlay.open{
+    opacity:1;pointer-events:auto;
+  }
+  .modal-box{
+    background:var(--indigo-deep);
+    max-width:920px;width:100%;
+    border-radius:16px;
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 30px 60px rgba(0,0,0,0.5);
+    border:1px solid var(--gold);
+    animation:modalPop .3s ease forwards;
+  }
+  @keyframes modalPop {
+    from{transform:scale(0.95);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+  }
+  .modal-close{
+    position:absolute;top:16px;right:16px;z-index:10;
+    background:rgba(250,246,237,0.15);color:var(--parchment);
+    border:none;width:38px;height:38px;border-radius:50%;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;
+    transition:background .2s;
+  }
+  .modal-close:hover{background:var(--burgundy);}
+  .modal-img-area{
+    height:540px;background:var(--indigo-deep);
+    display:flex;align-items:center;justify-content:center;
+    position:relative;overflow:hidden;
+  }
+  .modal-img-area img{
+    width:100%;height:100%;
+    object-fit:contain;
+    display:block;
+  }
+
+  /* ===== CTA SECTION ===== */
+  .cta{
+    background:var(--indigo-deep);color:var(--parchment);
+    padding:88px 0;text-align:center;
+  }
+  .cta-inner{max-width:640px;margin:0 auto;}
+  .cta .mono{color:var(--gold-soft);display:block;margin-bottom:20px;}
+  .cta h2{font-size:clamp(1.8rem,3.4vw,2.6rem);color:var(--parchment);margin-bottom:20px;}
+  .cta p{color:rgba(250,246,237,0.7);margin-bottom:38px;font-size:1.02rem;}
+  .cta-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+  .btn-gold{background:var(--gold);color:var(--indigo-deep);padding:16px 34px;font-weight:600;font-size:0.92rem;border-radius:var(--radius);display:inline-block;transition:background .2s;}
+  .btn-gold:hover{background:var(--gold-soft);}
+  .btn-ghost-light{border:1px solid rgba(250,246,237,0.3);color:var(--parchment);padding:16px 34px;font-weight:500;font-size:0.92rem;border-radius:var(--radius);display:inline-block;transition:border-color .2s, background .2s;}
+  .btn-ghost-light:hover{border-color:var(--gold);background:rgba(250,246,237,0.05);}
+
+  /* ===== FOOTER ===== */
+  footer{background:var(--indigo-deep);color:rgba(250,246,237,0.6);padding:56px 0 32px;border-top:1px solid rgba(250,246,237,0.1);}
+  .footer-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:48px;padding-bottom:44px;border-bottom:1px solid rgba(250,246,237,0.1);}
+  .footer-brand{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+  .footer-brand span{font-family:'Fraunces',serif;color:var(--parchment);font-size:0.95rem;font-weight:600;line-height:1.3;}
+  footer p{font-size:0.83rem;max-width:280px;color:rgba(250,246,237,0.5);}
+  .footer-col .mono{color:var(--gold-soft);display:block;margin-bottom:16px;}
+  .footer-col a{display:block;font-size:0.9rem;padding:5px 0;color:rgba(250,246,237,0.65);transition:color .2s;}
+  .footer-col a:hover{color:var(--gold-soft);}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;font-size:0.8rem;flex-wrap:wrap;gap:12px;color:rgba(250,246,237,0.4);}
+
+  /* ===== PINTEREST RESPONSIVE MEDIA QUERIES ===== */
+  @media (max-width:1200px){
+    .masonry-grid {
+      column-count: 3;
+      column-gap: 18px;
+    }
+  }
+
+  @media (max-width:860px){
+    .menu-btn{display:block;}
+    .masonry-grid {
+      column-count: 2;
+      column-gap: 14px;
+    }
+    .masonry-item {
+      margin-bottom: 14px;
+      border-radius: 12px;
+    }
+    .ratio-tall { height: 340px; }
+    .ratio-short { height: 190px; }
+    .ratio-medium { height: 270px; }
+    .ratio-extratall { height: 400px; }
+    .ratio-square { height: 230px; }
+    .modal-img-area { height: 400px; }
+
+    /* 2-column grid dropdown */
+    nav.links{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      position:absolute;
+      top:100%;left:0;right:0;
+      background:var(--parchment);
+      padding:0 24px;
+      border-bottom:1px solid var(--line);
+      overflow:hidden;
+      max-height:0;
+      transition:max-height .35s cubic-bezier(0.16,1,0.3,1), padding .3s ease;
+    }
+    nav.links.open{
+      max-height:400px;
+      padding:12px 24px 16px;
+    }
+    nav.links a{
+      padding:8px 6px;
+      border-bottom:1px solid var(--line);
+      font-size:0.84rem;
+      color:var(--indigo);
+      font-weight:500;
+    }
+    nav.links a:last-child{border-bottom:none;}
+    nav.links .nav-cta{
+      grid-column:1 / -1;
+      text-align:center;
+      margin-top:6px;
+      padding:10px 14px;
+      background:var(--gold) !important;
+      color:var(--indigo-deep) !important;
+      font-size:0.84rem;
+      font-weight:600;
+      border-bottom:none;
+      border-radius:var(--radius);
+    }
+    .footer-brand span{font-size:0.88rem;}
+    footer p{font-size:0.8rem;}
+    .footer-col a{font-size:0.84rem;}
+  }
+
+  @media (max-width:480px){
+    .wrap { padding: 0 12px; }
+    .page-hero { padding: 48px 16px 36px; }
+    .gallery-section { padding: 24px 0 60px; }
+    
+    /* PINTEREST MOBILE 2-COLUMN STACKING */
+    .masonry-grid {
+      column-count: 2;
+      column-gap: 10px;
+    }
+    .masonry-item {
+      margin-bottom: 10px;
+      border-radius: 10px;
+    }
+    .ratio-tall { height: 240px; }
+    .ratio-short { height: 140px; }
+    .ratio-medium { height: 190px; }
+    .ratio-extratall { height: 290px; }
+    .ratio-square { height: 170px; }
+    .modal-img-area { height: 320px; }
+  }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .7s cubic-bezier(0.16,1,0.3,1), transform .7s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="nav">
+    <a href="index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 34L10 14L18 24L24 10L30 24L38 14L42 34H6Z" stroke="#241B4E" stroke-width="2.4" stroke-linejoin="round" fill="#C9A227" fill-opacity="0.15"/>
+        <circle cx="10" cy="14" r="2.4" fill="#C9A227"/>
+        <circle cx="24" cy="10" r="2.4" fill="#C9A227"/>
+        <circle cx="38" cy="14" r="2.4" fill="#C9A227"/>
+        <rect x="6" y="36" width="36" height="3" fill="#241B4E"/>
+      </svg>
+      <div class="brand-name">Royalties <span>International Christian Schools</span></div>
+    </a>
+    <nav class="links">
+      <a href="index.html#about">About</a>
+      <a href="index.html#academics">Academics</a>
+      <a href="index.html#why">Why Royalties</a>
+      <a href="index.html#campuses">Campuses</a>
+      <a href="gallery.html" class="active">Gallery</a>
+      <a href="portal.html">Portal</a>
+      <a href="admissions.html" class="nav-cta">Begin Admissions</a>
+    </nav>
+    <button class="menu-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> <span>/</span> <span>Campus Gallery</span></div>
+    <h1>Campus Gallery</h1>
+  </div>
+</section>
+
+<!-- PINTEREST MASONRY GALLERY SECTION -->
+<section class="gallery-section">
+  <div class="wrap">
+
+    <!-- MASONRY WATERFALL GRID -->
+    <div class="masonry-grid" id="gallery-grid">
+
+      <!-- PIN 1 -->
+      <div class="masonry-item ratio-extratall" data-img="images/img1.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img1.jpg" alt="Royalties campus photo 1" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 2 -->
+      <div class="masonry-item ratio-medium" data-img="images/img2.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img2.jpg" alt="Royalties campus photo 2" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 3 -->
+      <div class="masonry-item ratio-tall" data-img="images/img3.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img3.jpg" alt="Royalties campus photo 3" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 4 -->
+      <div class="masonry-item ratio-short" data-img="images/img4.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img4.jpg" alt="Royalties campus photo 4" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 5 -->
+      <div class="masonry-item ratio-square" data-img="images/img5.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img5.jpg" alt="Royalties campus photo 5" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 6 -->
+      <div class="masonry-item ratio-extratall" data-img="images/img6.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img6.jpg" alt="Royalties campus photo 6" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 7 -->
+      <div class="masonry-item ratio-medium" data-img="images/img7.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img7.jpg" alt="Royalties campus photo 7" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 8 -->
+      <div class="masonry-item ratio-tall" data-img="images/img8.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img8.jpg" alt="Royalties campus photo 8" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 9 -->
+      <div class="masonry-item ratio-short" data-img="images/img9.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img9.jpg" alt="Royalties campus photo 9" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 10 -->
+      <div class="masonry-item ratio-square" data-img="images/img10.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img10.jpg" alt="Royalties campus photo 10" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 11 -->
+      <div class="masonry-item ratio-medium" data-img="images/img11.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img11.jpg" alt="Royalties campus photo 11" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- PIN 12 -->
+      <div class="masonry-item ratio-tall" data-img="images/img12.jpg">
+        <div class="masonry-img-wrapper">
+          <img src="images/img12.jpg" alt="Royalties campus photo 12" loading="lazy">
+        </div>
+        <div class="masonry-overlay">
+          <div class="pin-badge">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX MODAL -->
+<div class="modal-overlay" id="gallery-modal" aria-hidden="true">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close-btn" aria-label="Close modal">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="modal-img-area">
+      <img id="modal-img" src="" alt="Gallery photo enlarged">
+    </div>
+  </div>
+</div>
+
+<!-- CTA SECTION -->
+<section class="cta">
+  <div class="wrap cta-inner">
+    <span class="mono">Experience Royalties In Person</span>
+    <h2>Would you like to tour our campuses?</h2>
+    <p>We welcome prospective parents and students for guided campus visits to observe our academic environment and meet our faculty.</p>
+    <div class="cta-actions">
+      <a href="admissions.html#contact-campuses" class="btn-gold">Schedule a Campus Visit</a>
+      <a href="admissions.html#enquiry" class="btn-ghost-light">Begin Admissions Enquiry</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand">
+          <span>Royalties International Christian Schools</span>
+        </div>
+        <p>Programming For Greatness — Pre-School, Primary &amp; Secondary education across Aba and Oron.</p>
+      </div>
+      <div class="footer-col">
+        <span class="mono">Campuses</span>
+        <a href="index.html#campuses">Aba Campus</a>
+        <a href="index.html#campuses">Oron Campus</a>
+      </div>
+      <div class="footer-col">
+        <span class="mono">Navigation</span>
+        <a href="index.html#about">About</a>
+        <a href="index.html#academics">Academics</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="admissions.html">Admissions</a>
+        <a href="portal.html">Portal Login</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Royalties International Christian Schools</span>
+      <span class="mono" style="color:rgba(250,246,237,0.35);">Aba &amp; Oron Campuses</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* Mobile Menu Toggle */
+  const menuBtn = document.querySelector('.menu-btn');
+  const navLinks = document.querySelector('nav.links');
+  menuBtn.addEventListener('click', () => {
+    menuBtn.classList.toggle('open');
+    navLinks.classList.toggle('open');
+  });
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menuBtn.classList.remove('open');
+      navLinks.classList.remove('open');
+    });
+  });
+
+  /* Modal Lightbox Logic */
+  const modal = document.getElementById('gallery-modal');
+  const closeModalBtn = document.getElementById('modal-close-btn');
+  const modalImg = document.getElementById('modal-img');
+  const masonryItems = document.querySelectorAll('.masonry-item');
+
+  masonryItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const src = item.dataset.img || item.querySelector('img').src;
+      const alt = item.querySelector('img').alt;
+      modalImg.src = src;
+      modalImg.alt = alt;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+    });
+  });
+
+  closeModalBtn.addEventListener('click', () => {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    modalImg.src = '';
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      modalImg.src = '';
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      modalImg.src = '';
+    }
+  });
+
+  /* Scroll Reveal — IntersectionObserver */
+  (function(){
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    /* Masonry pins stagger in */
+    document.querySelectorAll('.masonry-item').forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.transitionDelay = (i * 0.06) + 's';
+      io.observe(el);
+    });
+    /* CTA section */
+    document.querySelectorAll('.cta-inner').forEach(el => {
+      el.classList.add('reveal');
+      io.observe(el);
+    });
+  })();
+</script>
+
+</body>
+</html>

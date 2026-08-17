@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Portal — Royalties International Christian Schools</title>
+<meta name="description" content="Admin portal for Royalties International Christian Schools. Full school management including students, staff, enrolment, fees and announcements.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#241B4E;--indigo-deep:#180F38;--gold:#C9A227;--gold-soft:#E4CB79;
+    --parchment:#FAF6ED;--parchment-dim:#F1EBDA;--burgundy:#6B1E3C;
+    --ink:#1A1424;--ink-soft:#4A4258;--line:rgba(26,20,36,0.12);--radius:6px;
+    --sidebar:260px;--accent:#8B6FD4;--accent-light:rgba(139,111,212,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  @media(prefers-reduced-motion:reduce){*{animation-duration:0.001ms!important;transition-duration:0.001ms!important;}}
+  html,body{height:100%;}
+  body{background:var(--parchment);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3,h4{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;font-size:0.72rem;font-weight:500;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
+
+  /* Layout */
+  .portal-layout{display:flex;min-height:100vh;}
+
+  /* Sidebar */
+  .sidebar{width:var(--sidebar);flex-shrink:0;background:var(--indigo-deep);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;z-index:40;}
+  .sidebar-brand{padding:24px 24px 20px;border-bottom:1px solid rgba(250,246,237,0.08);display:flex;align-items:center;gap:10px;}
+  .sidebar-brand-text{font-family:'Fraunces',serif;color:var(--parchment);font-size:0.9rem;font-weight:600;line-height:1.2;}
+  .sidebar-brand-text small{display:block;font-family:'JetBrains Mono',monospace;font-size:0.56rem;letter-spacing:0.1em;text-transform:uppercase;color:#B59EE8;margin-top:2px;}
+  .sidebar-user{padding:20px 24px;border-bottom:1px solid rgba(250,246,237,0.08);display:flex;align-items:center;gap:12px;}
+  .user-avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--accent),#5B3FAD);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:1rem;color:var(--parchment);font-weight:600;}
+  .user-info small{display:block;font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(250,246,237,0.45);}
+  .user-info strong{display:block;color:var(--parchment);font-size:0.88rem;font-weight:500;margin-top:1px;}
+  .sidebar-nav{padding:16px 12px;flex:1;}
+  .nav-section-label{font-family:'JetBrains Mono',monospace;font-size:0.58rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(250,246,237,0.35);padding:10px 12px 6px;}
+  .nav-item{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:6px;font-size:0.88rem;color:rgba(250,246,237,0.65);cursor:pointer;transition:background .2s,color .2s;border:none;background:none;width:100%;text-align:left;}
+  .nav-item svg{flex-shrink:0;opacity:0.7;}
+  .nav-item:hover{background:rgba(250,246,237,0.07);color:var(--parchment);}
+  .nav-item.active{background:rgba(139,111,212,0.2);color:#B59EE8;}
+  .nav-item.active svg{opacity:1;}
+  .sidebar-bottom{padding:16px 24px;border-top:1px solid rgba(250,246,237,0.08);}
+  .back-link{display:flex;align-items:center;gap:8px;font-size:0.83rem;color:rgba(250,246,237,0.45);transition:color .2s;padding:6px 0;}
+  .back-link:hover{color:#B59EE8;}
+
+  /* Main */
+  .main{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .topbar{background:rgba(250,246,237,0.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30;}
+  .topbar-left{display:flex;align-items:center;gap:16px;}
+  .topbar-title{font-family:'Fraunces',serif;font-size:1.1rem;color:var(--indigo);}
+  .campus-switcher{display:flex;border:1px solid var(--line);border-radius:40px;overflow:hidden;background:#fff;}
+  .campus-btn{padding:5px 16px;font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;border:none;background:none;cursor:pointer;color:var(--ink-soft);transition:background .2s,color .2s;}
+  .campus-btn.active{background:var(--indigo);color:var(--parchment);}
+  .topbar-right{display:flex;align-items:center;gap:14px;}
+  .notif-btn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:border-color .2s;}
+  .notif-btn:hover{border-color:var(--accent);}
+  .notif-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--burgundy);border:2px solid var(--parchment);}
+  .mobile-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--indigo);}
+  .content{flex:1;padding:28px;}
+
+  /* Stats */
+  .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+  .stat-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;transition:transform .25s,box-shadow .25s;}
+  .stat-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(36,27,78,0.07);}
+  .stat-label{font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:8px;}
+  .stat-value{font-family:'Fraunces',serif;font-size:1.85rem;font-weight:600;color:var(--indigo);line-height:1;}
+  .stat-sub{font-size:0.8rem;color:var(--ink-soft);margin-top:5px;}
+  .stat-badge{display:inline-flex;align-items:center;gap:4px;font-size:0.75rem;font-weight:600;padding:2px 8px;border-radius:40px;margin-top:6px;}
+  .stat-badge.good{background:rgba(46,158,101,0.12);color:#1B6B44;}
+  .stat-badge.warn{background:rgba(201,162,39,0.15);color:#7A5E0E;}
+  .stat-badge.info{background:rgba(139,111,212,0.12);color:#5B3FAD;}
+
+  .content-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:20px;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+  .card-header{padding:18px 22px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);}
+  .card-title{font-family:'Fraunces',serif;font-size:1.02rem;color:var(--indigo);}
+  .card-action{font-size:0.8rem;color:var(--accent);font-weight:500;cursor:pointer;}
+  .card-body{padding:18px 22px;}
+
+  /* Table */
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+  th{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft);padding:10px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap;}
+  td{padding:12px 14px;border-bottom:1px solid rgba(26,20,36,0.06);color:var(--ink-soft);white-space:nowrap;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(139,111,212,0.03);}
+
+  .status-pill{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border-radius:40px;}
+  .status-pill.active{background:rgba(46,158,101,0.12);color:#1B6B44;}
+  .status-pill.inactive{background:rgba(107,30,60,0.1);color:var(--burgundy);}
+  .status-pill.pending{background:rgba(201,162,39,0.12);color:#7A5E0E;}
+
+  /* Progress bars */
+  .progress-rows{display:flex;flex-direction:column;gap:16px;}
+  .progress-item{}
+  .progress-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .progress-label span:first-child{font-size:0.88rem;color:var(--ink);}
+  .progress-label span:last-child{font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--ink-soft);}
+  .progress-bar-bg{height:8px;background:var(--parchment-dim);border-radius:40px;overflow:hidden;}
+  .progress-bar-fill{height:100%;border-radius:40px;transition:width .7s ease;}
+  .fill-green{background:linear-gradient(90deg,#2E9E65,#1B6B44);}
+  .fill-gold{background:linear-gradient(90deg,var(--gold),var(--gold-soft));}
+  .fill-purple{background:linear-gradient(90deg,var(--accent),#5B3FAD);}
+  .fill-red{background:linear-gradient(90deg,var(--burgundy),#C13E6A);}
+
+  /* Announce compose */
+  .compose-area{display:flex;flex-direction:column;gap:14px;}
+  .compose-input{
+    width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius);
+    font-family:'Inter',sans-serif;font-size:0.92rem;color:var(--ink);background:#fff;
+    transition:border-color .2s;resize:vertical;
+  }
+  .compose-input:focus{outline:none;border-color:var(--accent);}
+  .compose-select{padding:10px 14px;border:1px solid var(--line);border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:0.88rem;color:var(--ink);background:#fff;cursor:pointer;width:100%;}
+  .compose-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+  .publish-btn{background:var(--accent);color:#fff;border:none;padding:11px 24px;border-radius:var(--radius);font-size:0.88rem;font-weight:600;cursor:pointer;transition:background .2s;}
+  .publish-btn:hover{background:#5B3FAD;}
+  .draft-btn{background:none;border:1px solid var(--line);color:var(--ink-soft);padding:11px 20px;border-radius:var(--radius);font-size:0.88rem;cursor:pointer;transition:border-color .2s;}
+  .draft-btn:hover{border-color:var(--accent);}
+
+  /* Campus comparison */
+  .campus-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+  .campus-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;}
+  .campus-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+  .campus-name{font-family:'Fraunces',serif;font-size:1.05rem;color:var(--indigo);}
+  .campus-dot{width:10px;height:10px;border-radius:50%;}
+  .campus-dot.aba{background:var(--gold);}
+  .campus-dot.oron{background:var(--accent);}
+  .campus-metric{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(26,20,36,0.06);font-size:0.88rem;}
+  .campus-metric:last-child{border-bottom:none;}
+  .campus-metric span:first-child{color:var(--ink-soft);}
+  .campus-metric span:last-child{font-weight:600;color:var(--ink);}
+
+  /* Bottom nav */
+  .bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(250,246,237,0.97);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:8px 0 env(safe-area-inset-bottom,8px);}
+  .bottom-nav-items{display:flex;justify-content:space-around;}
+  .bnav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;border-radius:var(--radius);font-size:0.64rem;font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;text-transform:uppercase;color:var(--ink-soft);cursor:pointer;background:none;border:none;transition:color .2s;min-width:60px;}
+  .bnav-item.active{color:var(--indigo);}
+
+  /* Profile Popover / Dropdown */
+  .profile-menu-container{position:relative;}
+  .profile-btn{
+    display:flex;align-items:center;gap:8px;
+    background:rgba(139,111,212,0.08);border:1px solid var(--line);
+    border-radius:40px;padding:4px 12px 4px 4px;cursor:pointer;
+    transition:background .2s, border-color .2s;
+  }
+  .profile-btn:hover{background:rgba(139,111,212,0.16);border-color:var(--accent);}
+  .profile-btn-avatar{
+    width:30px;height:30px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),#5B3FAD);
+    color:var(--parchment);display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-size:0.85rem;font-weight:600;
+  }
+  .profile-btn-name{font-size:0.82rem;font-weight:500;color:var(--indigo);}
+  .profile-dropdown{
+    position:absolute;top:calc(100% + 8px);right:0;width:250px;
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 14px 32px rgba(24,15,56,0.18);
+    padding:16px;z-index:100;display:none;flex-direction:column;gap:8px;
+  }
+  .profile-dropdown.open{display:flex;animation:popIn .2s ease forwards;}
+  @keyframes popIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+  .pd-user-info{padding-bottom:12px;border-bottom:1px solid var(--line);}
+  .pd-user-name{font-size:0.92rem;font-weight:600;color:var(--indigo);}
+  .pd-user-role{font-family:'JetBrains Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-soft);margin-top:2px;}
+  .pd-link{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;
+    font-size:0.85rem;color:var(--ink-soft);transition:background .2s,color .2s;
+  }
+  .pd-link:hover{background:var(--parchment-dim);color:var(--indigo);}
+  .pd-logout{
+    display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:6px;
+    font-size:0.85rem;color:var(--burgundy);background:rgba(107,30,60,0.06);
+    font-weight:500;transition:background .2s;margin-top:4px;
+  }
+  .pd-logout:hover{background:rgba(107,30,60,0.14);}
+
+  /* Responsive */
+  @media(max-width:900px){
+    .sidebar{display:none;}
+    .bottom-nav{display:block;}
+    .main{padding-bottom:72px;}
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .content-grid{grid-template-columns:1fr;}
+    .campus-compare{grid-template-columns:1fr;}
+    .content{padding:18px 16px;}
+    .topbar{padding:0 16px;}
+    .profile-btn-name{display:none;}
+    .profile-btn{padding:4px;}
+  }
+  @media(max-width:480px){
+    .stats-grid{grid-template-columns:1fr 1fr;}
+    .campus-switcher{display:none;}
+    .compose-row{flex-direction:column;align-items:flex-start;}
+    .publish-btn,.draft-btn{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<div class="portal-layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <svg width="28" height="28" viewBox="0 0 48 48" fill="none">
+        <path d="M6 34L10 14L18 24L24 10L30 24L38 14L42 34H6Z" stroke="#C9A227" stroke-width="2.4" stroke-linejoin="round" fill="rgba(201,162,39,0.12)"/>
+        <rect x="6" y="36" width="36" height="3" fill="#C9A227"/>
+      </svg>
+      <div class="sidebar-brand-text">Royalties<small>Admin Portal</small></div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar">P</div>
+      <div class="user-info">
+        <small>Administrator</small>
+        <strong>Principal Obiora</strong>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Management</div>
+      <button class="nav-item active" onclick="switchTab('dashboard',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="switchTab('students',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Students
+      </button>
+      <button class="nav-item" onclick="switchTab('staff',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Staff
+      </button>
+      <button class="nav-item" onclick="switchTab('finance',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Finance
+      </button>
+      <div class="nav-section-label" style="margin-top:8px;">Communication</div>
+      <button class="nav-item" onclick="switchTab('announcements',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Announcements
+      </button>
+      <button class="nav-item" onclick="switchTab('campuses',this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Campuses
+      </button>
+    </nav>
+    <div class="sidebar-bottom">
+      <a href="portal.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Change Portal
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <span class="topbar-title" id="page-title">Admin Dashboard</span>
+        <div class="campus-switcher">
+          <button class="campus-btn active" onclick="setCampus('all', this)">Both</button>
+          <button class="campus-btn" onclick="setCampus('aba', this)">Aba</button>
+          <button class="campus-btn" onclick="setCampus('oron', this)">Oron</button>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" aria-label="Notifications">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-dot"></span>
+        </button>
+
+        <!-- Profile Dropdown Button -->
+        <div class="profile-menu-container">
+          <button class="profile-btn" id="profile-btn" aria-label="User menu">
+            <div class="profile-btn-avatar">P</div>
+            <span class="profile-btn-name">Prin. Obiora</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="profile-dropdown" id="profile-dropdown">
+            <div class="pd-user-info">
+              <div class="pd-user-name">Principal Obiora</div>
+              <div class="pd-user-role">Administrator · Both Campuses</div>
+            </div>
+            <a href="portal.html" class="pd-link">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 17l5-5-5-5M19.8 12H9"/></svg>
+              Switch Role / Portal
+            </a>
+            <a href="index.html" class="pd-logout">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Log Out of Portal
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div id="tab-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Enrolment</div>
+            <div class="stat-value">487</div>
+            <div class="stat-sub">Aba: 278 · Oron: 209</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Teaching Staff</div>
+            <div class="stat-value">34</div>
+            <span class="stat-badge info">2 vacancies</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Avg. Attendance</div>
+            <div class="stat-value">91%</div>
+            <span class="stat-badge good">Above target</span>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Fee Collection</div>
+            <div class="stat-value">78%</div>
+            <span class="stat-badge warn">₦1.2M pending</span>
+          </div>
+        </div>
+
+        <!-- Campus compare -->
+        <div class="campus-compare">
+          <div class="campus-card">
+            <div class="campus-card-head">
+              <span class="campus-name">Aba Campus</span>
+              <span class="campus-dot aba"></span>
+            </div>
+            <div class="campus-metric"><span>Enrolment</span><span>278 students</span></div>
+            <div class="campus-metric"><span>Teaching Staff</span><span>20 teachers</span></div>
+            <div class="campus-metric"><span>Attendance Rate</span><span>93%</span></div>
+            <div class="campus-metric"><span>Fee Collection</span><span>82%</span></div>
+            <div class="campus-metric"><span>Classes</span><span>14 streams</span></div>
+          </div>
+          <div class="campus-card">
+            <div class="campus-card-head">
+              <span class="campus-name">Oron Campus</span>
+              <span class="campus-dot oron"></span>
+            </div>
+            <div class="campus-metric"><span>Enrolment</span><span>209 students</span></div>
+            <div class="campus-metric"><span>Teaching Staff</span><span>14 teachers</span></div>
+            <div class="campus-metric"><span>Attendance Rate</span><span>89%</span></div>
+            <div class="campus-metric"><span>Fee Collection</span><span>74%</span></div>
+            <div class="campus-metric"><span>Classes</span><span>11 streams</span></div>
+          </div>
+        </div>
+
+        <div class="content-grid">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Performance Overview</span></div>
+            <div class="card-body">
+              <div class="progress-rows">
+                <div class="progress-item">
+                  <div class="progress-label"><span>Attendance Rate</span><span>91% / 95% target</span></div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-green" style="width:91%"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-label"><span>Fee Collection</span><span>78% / 100% target</span></div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-gold" style="width:78%"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-label"><span>Results Submitted</span><span>68% teachers done</span></div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-purple" style="width:68%"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-label"><span>Pre-School Capacity</span><span>88% / 100</span></div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-green" style="width:88%"></div></div>
+                </div>
+                <div class="progress-item">
+                  <div class="progress-label"><span>Secondary Enrolment</span><span>74% capacity</span></div>
+                  <div class="progress-bar-bg"><div class="progress-bar-fill fill-purple" style="width:74%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Recent Activity</span></div>
+            <div class="card-body" style="padding:0 22px;">
+              <div style="display:flex;flex-direction:column;">
+                <div style="padding:12px 0;border-bottom:1px solid rgba(26,20,36,0.06)"><div style="font-size:0.88rem;font-weight:500;color:var(--ink)">New admission: Emeka Eze (JSS1)</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em">Aba Campus · 1 hour ago</div></div>
+                <div style="padding:12px 0;border-bottom:1px solid rgba(26,20,36,0.06)"><div style="font-size:0.88rem;font-weight:500;color:var(--ink)">Fee received: ₦45,000 — Okon Family</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em">Oron Campus · 3 hours ago</div></div>
+                <div style="padding:12px 0;border-bottom:1px solid rgba(26,20,36,0.06)"><div style="font-size:0.88rem;font-weight:500;color:var(--ink)">Results submitted: Mr. Nwosu (JSS 1A &amp; 1B)</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em">Teacher Portal · Today</div></div>
+                <div style="padding:12px 0;border-bottom:1px solid rgba(26,20,36,0.06)"><div style="font-size:0.88rem;font-weight:500;color:var(--ink)">Announcement published: End-of-term exam</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em">Admin · Yesterday</div></div>
+                <div style="padding:12px 0"><div style="font-size:0.88rem;font-weight:500;color:var(--ink)">Timetable updated for both campuses</div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em">Admin · 2 days ago</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div id="tab-students" style="display:none;">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Pre-School</div><div class="stat-value">88</div><div class="stat-sub">Both campuses</div></div>
+          <div class="stat-card"><div class="stat-label">Primary</div><div class="stat-value">214</div><div class="stat-sub">P1–P6</div></div>
+          <div class="stat-card"><div class="stat-label">Secondary</div><div class="stat-value">185</div><div class="stat-sub">JSS1–SSS3</div></div>
+          <div class="stat-card"><div class="stat-label">New This Term</div><div class="stat-value">23</div><span class="stat-badge good">Admissions open</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Student Records</span><span class="card-action">+ Add Student</span></div>
+          <div class="card-body" style="padding:0;">
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>Adm. No.</th><th>Full Name</th><th>Level</th><th>Class</th><th>Campus</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">ABA/001</td><td style="font-weight:500;color:var(--ink)">Adaeze Obi</td><td>Primary</td><td>Pry 4A</td><td>Aba</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">ABA/002</td><td style="font-weight:500;color:var(--ink)">Chukwuemeka Okoye</td><td>Secondary</td><td>JSS 2B</td><td>Aba</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">ORN/001</td><td style="font-weight:500;color:var(--ink)">Favour Bassey</td><td>Pre-School</td><td>Nursery 2</td><td>Oron</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">ORN/002</td><td style="font-weight:500;color:var(--ink)">Ifeoma Udoh</td><td>Secondary</td><td>SSS 1A</td><td>Oron</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">ABA/045</td><td style="font-weight:500;color:var(--ink)">Kelechi Eze</td><td>Primary</td><td>Pry 6B</td><td>Aba</td><td><span class="status-pill pending">On Leave</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">ORN/030</td><td style="font-weight:500;color:var(--ink)">Miracle Okon</td><td>Secondary</td><td>JSS 3A</td><td>Oron</td><td><span class="status-pill active">Active</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAFF -->
+      <div id="tab-staff" style="display:none;">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Teaching Staff</div><div class="stat-value">34</div><div class="stat-sub">Across both campuses</div></div>
+          <div class="stat-card"><div class="stat-label">Admin Staff</div><div class="stat-value">8</div><div class="stat-sub">Bursar, Secretary etc.</div></div>
+          <div class="stat-card"><div class="stat-label">Support Staff</div><div class="stat-value">12</div><div class="stat-sub">Security, Cleaners</div></div>
+          <div class="stat-card"><div class="stat-label">Vacancies</div><div class="stat-value">2</div><span class="stat-badge warn">Maths · Science</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Staff Directory</span><span class="card-action">+ Add Staff</span></div>
+          <div class="card-body" style="padding:0;">
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>ID</th><th>Full Name</th><th>Role</th><th>Subject</th><th>Campus</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">T-001</td><td style="font-weight:500;color:var(--ink)">Mr. A. Nwosu</td><td>Teacher</td><td>Mathematics</td><td>Aba</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">T-002</td><td style="font-weight:500;color:var(--ink)">Mrs. C. Eze</td><td>Teacher</td><td>English Language</td><td>Aba</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">T-003</td><td style="font-weight:500;color:var(--ink)">Mr. K. Bassey</td><td>Teacher</td><td>Basic Science</td><td>Oron</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">A-001</td><td style="font-weight:500;color:var(--ink)">Mrs. I. Okon</td><td>Bursar</td><td>Finance</td><td>Aba</td><td><span class="status-pill active">Active</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">T-004</td><td style="font-weight:500;color:var(--ink)">Mr. F. Okafor</td><td>Teacher</td><td>Social Studies</td><td>Oron</td><td><span class="status-pill pending">On Leave</span></td></tr>
+                  <tr><td style="font-family:'JetBrains Mono',monospace;font-size:0.72rem">T-005</td><td style="font-weight:500;color:var(--ink)">Mrs. N. Amadi</td><td>Teacher</td><td>Christian R.S.</td><td>Aba</td><td><span class="status-pill active">Active</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FINANCE -->
+      <div id="tab-finance" style="display:none;">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Total Expected</div><div class="stat-value" style="font-size:1.4rem">₦6.3M</div><div class="stat-sub">2025/2026 Session</div></div>
+          <div class="stat-card"><div class="stat-label">Collected</div><div class="stat-value" style="font-size:1.4rem">₦4.9M</div><span class="stat-badge good">78% rate</span></div>
+          <div class="stat-card"><div class="stat-label">Outstanding</div><div class="stat-value" style="font-size:1.4rem">₦1.4M</div><span class="stat-badge warn">Chasing 87 families</span></div>
+          <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value" style="font-size:1.4rem">₦420k</div><span class="stat-badge good">▲ +18%</span></div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Fee Collection by Campus & Level</span></div>
+          <div class="card-body">
+            <div class="progress-rows">
+              <div class="progress-item"><div class="progress-label"><span>Aba — Pre-School</span><span>91%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill fill-green" style="width:91%"></div></div></div>
+              <div class="progress-item"><div class="progress-label"><span>Aba — Primary</span><span>85%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill fill-green" style="width:85%"></div></div></div>
+              <div class="progress-item"><div class="progress-label"><span>Aba — Secondary</span><span>79%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill fill-gold" style="width:79%"></div></div></div>
+              <div class="progress-item"><div class="progress-label"><span>Oron — Pre-School</span><span>88%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill fill-green" style="width:88%"></div></div></div>
+              <div class="progress-item"><div class="progress-label"><span>Oron — Primary</span><span>71%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill fill-gold" style="width:71%"></div></div></div>
+              <div class="progress-item"><div class="progress-label"><span>Oron — Secondary</span><span>64%</span></div><div class="progress-bar-bg"><div class="progress-bar-fill fill-red" style="width:64%"></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANNOUNCEMENTS -->
+      <div id="tab-announcements" style="display:none;">
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header"><span class="card-title">Compose Announcement</span></div>
+          <div class="card-body">
+            <div class="compose-area">
+              <input class="compose-input" type="text" placeholder="Announcement title…" id="annc-title">
+              <textarea class="compose-input" rows="4" placeholder="Write your announcement here…" id="annc-body"></textarea>
+              <div class="compose-row">
+                <select class="compose-select" id="annc-audience" style="max-width:200px;">
+                  <option>All — Parents & Staff</option>
+                  <option>Parents Only</option>
+                  <option>Staff Only</option>
+                  <option>Aba Campus Only</option>
+                  <option>Oron Campus Only</option>
+                </select>
+                <button class="publish-btn" onclick="publishAnnc()">Publish Now</button>
+                <button class="draft-btn">Save Draft</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">Published Announcements</span></div>
+          <div class="card-body" style="padding:0 22px;">
+            <div style="display:flex;flex-direction:column;">
+              <div style="padding:14px 0;border-bottom:1px solid rgba(26,20,36,0.06)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="font-size:0.9rem;font-weight:500;color:var(--ink)">End of Term Examination begins Monday 2nd September</div><span style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.06em;color:#1B6B44;">Published</span></div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.06em;">All · Principal · 2 days ago</div></div>
+              <div style="padding:14px 0;border-bottom:1px solid rgba(26,20,36,0.06)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="font-size:0.9rem;font-weight:500;color:var(--ink)">Fee payment deadline: Friday 30th August</div><span style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.06em;color:#1B6B44;">Published</span></div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.06em;">Parents · Bursar · 4 days ago</div></div>
+              <div style="padding:14px 0"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px"><div style="font-size:0.9rem;font-weight:500;color:var(--ink)">Cultural Day — All students in traditional attire</div><span style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.06em;color:#1B6B44;">Published</span></div><div style="font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:0.06em;">All · Secretary · 1 week ago</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAMPUSES -->
+      <div id="tab-campuses" style="display:none;">
+        <div class="campus-compare">
+          <div class="campus-card">
+            <div class="campus-card-head"><span class="campus-name">Aba Campus</span><span class="status-pill active">Operational</span></div>
+            <div class="campus-metric"><span>Address</span><span style="white-space:normal;text-align:right;max-width:160px;font-size:0.83rem">36 Ekenna Avenue, off Okigwe Road, Aba</span></div>
+            <div class="campus-metric"><span>Enrolment</span><span>278 students</span></div>
+            <div class="campus-metric"><span>Teaching Staff</span><span>20</span></div>
+            <div class="campus-metric"><span>Attendance</span><span>93%</span></div>
+            <div class="campus-metric"><span>Fee Collection</span><span>82%</span></div>
+            <div class="campus-metric"><span>Principal</span><span>Mr. Obiora</span></div>
+          </div>
+          <div class="campus-card">
+            <div class="campus-card-head"><span class="campus-name">Oron Campus</span><span class="status-pill active">Operational</span></div>
+            <div class="campus-metric"><span>Address</span><span style="white-space:normal;text-align:right;max-width:160px;font-size:0.83rem">21 Oron Road, off Aba–Owerri Road</span></div>
+            <div class="campus-metric"><span>Enrolment</span><span>209 students</span></div>
+            <div class="campus-metric"><span>Teaching Staff</span><span>14</span></div>
+            <div class="campus-metric"><span>Attendance</span><span>89%</span></div>
+            <div class="campus-metric"><span>Fee Collection</span><span>74%</span></div>
+            <div class="campus-metric"><span>Head Teacher</span><span>Mrs. Eze</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav" aria-label="Mobile navigation">
+  <div class="bottom-nav-items">
+    <button class="bnav-item active" id="bnav-dashboard" onclick="switchTab('dashboard',this,true)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Home
+    </button>
+    <button class="bnav-item" id="bnav-students" onclick="switchTab('students',this,true)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      Students
+    </button>
+    <button class="bnav-item" id="bnav-finance" onclick="switchTab('finance',this,true)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+      Finance
+    </button>
+    <button class="bnav-item" id="bnav-announcements" onclick="switchTab('announcements',this,true)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      Announce
+    </button>
+    <button class="bnav-item" id="bnav-campuses" onclick="switchTab('campuses',this,true)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      Campuses
+    </button>
+  </div>
+</nav>
+
+<script>
+  /* Profile dropdown toggle */
+  const profileBtn = document.getElementById('profile-btn');
+  const profileDropdown = document.getElementById('profile-dropdown');
+  profileBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
+      profileDropdown.classList.remove('open');
+    }
+  });
+
+  const tabs=['dashboard','students','staff','finance','announcements','campuses'];
+  const titles={dashboard:'Admin Dashboard',students:'Student Records',staff:'Staff Directory',finance:'Finance Overview',announcements:'Announcements',campuses:'Campus Management'};
+
+  function switchTab(name,btn,isMobile=false){
+    tabs.forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display=t===name?'':'none';});
+    document.getElementById('page-title').textContent=titles[name]||name;
+    document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+    if(btn&&!isMobile)btn.classList.add('active');
+    document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));
+    const bnav=document.getElementById('bnav-'+name);if(bnav)bnav.classList.add('active');
+  }
+
+  function setCampus(campus, btn){
+    document.querySelectorAll('.campus-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function publishAnnc(){
+    const title=document.getElementById('annc-title').value;
+    const body=document.getElementById('annc-body').value;
+    if(!title||!body){alert('Please fill in both the title and body before publishing.');return;}
+    alert('Announcement published successfully to: '+document.getElementById('annc-audience').value);
+    document.getElementById('annc-title').value='';
+    document.getElementById('annc-body').value='';
+  }
+</script>
+</body>
+</html>

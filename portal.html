@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Login — Royalties International Christian Schools</title>
+<meta name="description" content="Log in to the Royalties International Christian Schools portal. Access parent, teacher, or administration dashboards.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --indigo:#241B4E;
+    --indigo-deep:#180F38;
+    --gold:#C9A227;
+    --gold-soft:#E4CB79;
+    --parchment:#FAF6ED;
+    --parchment-dim:#F1EBDA;
+    --burgundy:#6B1E3C;
+    --ink:#1A1424;
+    --ink-soft:#4A4258;
+    --line:rgba(26,20,36,0.12);
+    --radius:6px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:0.001ms!important;transition-duration:0.001ms!important;}
+  }
+  body{
+    background:var(--indigo-deep);
+    color:var(--parchment);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    display:flex;flex-direction:column;
+  }
+  a{color:inherit;text-decoration:none;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;letter-spacing:0.06em;text-transform:uppercase;font-size:0.72rem;font-weight:500;}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:3px;}
+
+  /* ===== HEADER ===== */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(24,15,56,0.92);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid rgba(250,246,237,0.1);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:1160px;margin:0 auto;gap:12px;}
+  .brand{display:flex;align-items:center;gap:10px;min-width:0;flex-shrink:1;}
+  .brand-mark{width:32px;height:32px;flex-shrink:0;}
+  .brand-name{font-family:'Fraunces',serif;font-weight:600;font-size:1rem;color:var(--parchment);min-width:0;overflow:hidden;}
+  .brand-name span{display:block;font-family:'JetBrains Mono',monospace;font-size:0.52rem;letter-spacing:0.06em;color:var(--gold-soft);text-transform:uppercase;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .nav-back{
+    border:1px solid rgba(250,246,237,0.25);color:var(--parchment);
+    padding:7px 14px;font-size:0.8rem;font-weight:500;flex-shrink:0;
+    border-radius:4px;transition:border-color .2s,background .2s;
+    display:flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .nav-back:hover{border-color:var(--gold);background:rgba(250,246,237,0.05);}
+
+  /* ===== LOGIN CONTAINER ===== */
+  .login-wrapper{
+    flex:1;
+    display:flex;align-items:center;justify-content:center;
+    padding:40px 20px 80px;
+    position:relative;
+    overflow:hidden;
+  }
+  .login-wrapper::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 700px 400px at 20% 40%, rgba(201,162,39,0.12),transparent 60%),
+      radial-gradient(ellipse 600px 500px at 80% 60%, rgba(107,30,60,0.15),transparent 60%);
+    pointer-events:none;
+  }
+  .login-card{
+    width:100%;max-width:440px;
+    background:rgba(250,246,237,0.04);
+    border:1px solid rgba(250,246,237,0.12);
+    backdrop-filter:blur(16px);
+    border-radius:16px;
+    padding:40px 36px;
+    position:relative;z-index:2;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  }
+
+  .login-header{text-align:center;margin-bottom:32px;}
+  .login-header h1{font-size:1.85rem;color:var(--parchment);margin-bottom:6px;}
+  .login-header p{font-size:0.88rem;color:rgba(250,246,237,0.65);}
+
+  /* Role detected badge */
+  .role-detected{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    background:rgba(201,162,39,0.12);border:1px solid rgba(201,162,39,0.25);
+    border-radius:40px;padding:6px 14px;
+    font-family:'JetBrains Mono',monospace;font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--gold-soft);margin-top:14px;
+    transition:all .3s ease;
+  }
+  .role-detected.teacher{background:rgba(46,158,101,0.14);border-color:rgba(46,158,101,0.3);color:#5DCEA0;}
+  .role-detected.admin{background:rgba(139,111,212,0.14);border-color:rgba(139,111,212,0.3);color:#B59EE8;}
+
+  /* Form */
+  form{display:flex;flex-direction:column;gap:18px;}
+  .form-group{display:flex;flex-direction:column;gap:8px;}
+  label{
+    font-family:'JetBrains Mono',monospace;font-size:0.68rem;letter-spacing:0.08em;text-transform:uppercase;
+    color:var(--gold-soft);font-weight:500;
+  }
+  .input-wrapper{position:relative;}
+  input{
+    width:100%;background:rgba(250,246,237,0.08);border:1px solid rgba(250,246,237,0.25);
+    color:var(--parchment);padding:13px 14px;border-radius:6px;font-family:'Inter',sans-serif;font-size:0.94rem;
+    transition:border-color .2s, background .2s;
+  }
+  input::placeholder{color:rgba(250,246,237,0.55);}
+  input:focus{outline:none;border-color:var(--gold);background:rgba(250,246,237,0.12);}
+
+  .submit-btn{
+    background:var(--gold);color:var(--indigo-deep);border:none;
+    padding:14px;font-weight:600;font-size:0.95rem;border-radius:6px;
+    cursor:pointer;margin-top:6px;transition:background .2s, transform .15s;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .submit-btn:hover{background:var(--gold-soft);transform:translateY(-1px);}
+
+  /* Demo logins under form */
+  .demo-hints {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(250,246,237,0.2);
+  }
+  .demo-hints-title {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .demo-hints-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .demo-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(250,246,237,0.07);
+    border: 1px solid rgba(250,246,237,0.2);
+    border-radius: 6px;
+    padding: 9px 14px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    color: var(--parchment);
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+  }
+  .demo-chip span {
+    font-weight: 500;
+  }
+  .demo-chip code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold-soft);
+    transition: color 0.2s ease;
+  }
+  .demo-chip:hover {
+    background: rgba(201,162,39,0.2);
+    border-color: var(--gold);
+    color: #FFFFFF;
+  }
+  .demo-chip.teacher:hover {
+    background: rgba(46,158,101,0.2);
+    border-color: #2E9E65;
+    color: #FFFFFF;
+  }
+  .demo-chip.admin:hover {
+    background: rgba(139,111,212,0.2);
+    border-color: #8B6FD4;
+    color: #FFFFFF;
+  }
+  .demo-chip:hover code {
+    color: #FFFFFF;
+  }
+
+  /* Responsive */
+  @media(max-width:480px){
+    .login-card{padding:32px 22px;}
+    .nav{padding:12px 16px;}
+    .brand-mark{width:28px;height:28px;}
+    .brand-name{font-size:0.92rem;}
+    .brand-name span{font-size:0.48rem;letter-spacing:0.04em;}
+    .nav-back{padding:6px 10px;font-size:0.75rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="brand">
+      <svg class="brand-mark" viewBox="0 0 48 48" fill="none">
+        <path d="M6 34L10 14L18 24L24 10L30 24L38 14L42 34H6Z" stroke="#C9A227" stroke-width="2.4" stroke-linejoin="round" fill="rgba(201,162,39,0.12)"/>
+        <rect x="6" y="36" width="36" height="3" fill="#C9A227"/>
+      </svg>
+      <div class="brand-name">Royalties <span>International Christian Schools</span></div>
+    </a>
+    <a href="index.html" class="nav-back">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Website
+    </a>
+  </div>
+</header>
+
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Portal Login</h1>
+      <p>Enter your credentials to access your portal</p>
+      <div class="role-detected" id="role-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="role-text">Role: Auto-Detecting…</span>
+      </div>
+    </div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="username">User ID / Email</label>
+        <input type="text" id="username" placeholder="e.g. parent@royalties.edu.ng" value="parent@royalties.edu.ng" required autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" value="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">
+        <span>Log In to Portal</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </form>
+
+    <!-- Small Clickable Demo Credentials Under Form -->
+    <div class="demo-hints">
+      <span class="demo-hints-title">Quick Demo Logins (click to test):</span>
+      <div class="demo-hints-list">
+        <button type="button" class="demo-chip parent" onclick="loginAs('parent')">
+          <span>👨‍👩‍👧 Parent Portal</span>
+          <code>parent@royalties.edu.ng</code>
+        </button>
+        <button type="button" class="demo-chip teacher" onclick="loginAs('teacher')">
+          <span>👩‍🏫 Teacher Portal</span>
+          <code>teacher@royalties.edu.ng</code>
+        </button>
+        <button type="button" class="demo-chip admin" onclick="loginAs('admin')">
+          <span>🛡️ Admin Portal</span>
+          <code>admin@royalties.edu.ng</code>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const usernameInput = document.getElementById('username');
+  const roleBadge = document.getElementById('role-badge');
+  const roleText = document.getElementById('role-text');
+  const loginForm = document.getElementById('login-form');
+
+  const roleMap = {
+    parent: { title: 'Parent Portal Detected', file: 'portal-parent.html', class: '' },
+    teacher: { title: 'Teacher Portal Detected', file: 'portal-teacher.html', class: 'teacher' },
+    admin: { title: 'Admin Portal Detected', file: 'portal-admin.html', class: 'admin' }
+  };
+
+  function detectRole(val) {
+    const v = val.toLowerCase();
+    if (v.includes('teacher') || v.includes('staff')) return 'teacher';
+    if (v.includes('admin') || v.includes('principal')) return 'admin';
+    return 'parent';
+  }
+
+  function updateBadge() {
+    const role = detectRole(usernameInput.value);
+    const config = roleMap[role];
+    roleText.textContent = config.title;
+    roleBadge.className = 'role-detected ' + config.class;
+  }
+
+  usernameInput.addEventListener('input', updateBadge);
+  updateBadge();
+
+  function loginAs(role) {
+    const credentials = {
+      parent: 'parent@royalties.edu.ng',
+      teacher: 'teacher@royalties.edu.ng',
+      admin: 'admin@royalties.edu.ng'
+    };
+    usernameInput.value = credentials[role];
+    updateBadge();
+    window.location.href = roleMap[role].file;
+  }
+
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const role = detectRole(usernameInput.value);
+    window.location.href = roleMap[role].file;
+  });
+</script>
+</body>
+</html>
