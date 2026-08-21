@@ -495,8 +495,12 @@
   }
 
   /* ===== LEVELS ===== */
-  .levels{background:var(--parchment-dim);}
-  .level-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line);}
+  .levels{
+    background:var(--parchment-dim);
+    position:relative;
+    overflow:visible;
+  }
+  .level-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--line);border:1px solid var(--line);overflow:visible;}
   .level-card{
     background:var(--parchment-dim);padding:44px 36px;
     transition:background .25s;
@@ -505,6 +509,39 @@
   .level-card .mono{color:var(--burgundy);display:block;margin-bottom:18px;}
   .level-card h3{font-size:1.35rem;color:var(--indigo);margin-bottom:12px;}
   .level-card p{color:var(--ink-soft);font-size:0.92rem;}
+
+  /* ===== SECTION CHARACTER — Secondary card ===== */
+  .section-character{
+    position:absolute;
+    height:auto;
+    pointer-events:none;
+    z-index:6;
+    object-fit:contain;
+  }
+  /* Secondary card: needs relative + visible overflow so character can break above the top border */
+  .level-card--secondary{
+    position:relative;
+    overflow:visible;
+  }
+  .secondary-character{
+    width:clamp(160px, 20vw, 280px);
+    bottom:100%;
+    right:16px;
+    transform:translateY(115px);
+  }
+  @media(max-width:1200px){
+    .secondary-character{ width:clamp(130px,16vw,220px); right:10px; transform:translateY(90px); }
+  }
+  @media(max-width:860px){
+    .secondary-character{ width:clamp(100px,18vw,160px); right:6px; transform:translateY(65px); }
+  }
+  @media(max-width:540px){
+    .secondary-character{
+      width:140px;
+      right:8px;
+      transform:translateY(58px);
+    }
+  }
 
   /* ===== WHY BENTO GRID ===== */
   .why{background:var(--parchment);}
@@ -841,7 +878,15 @@
       <h3>Primary</h3>
       <p>Core academic development with consistent routines, guided instruction, and growing independence.</p>
     </div>
-    <div class="level-card">
+    <!-- Secondary card: character sits on its top-right edge -->
+    <div class="level-card level-card--secondary">
+      <img
+        src="images/pre-school.png"
+        alt=""
+        class="section-character secondary-character"
+        aria-hidden="true"
+        draggable="false"
+      >
       <span class="mono">Stage Three</span>
       <h3>Secondary</h3>
       <p>Advanced coursework and discipline-building that prepares students for examinations and life beyond school.</p>
